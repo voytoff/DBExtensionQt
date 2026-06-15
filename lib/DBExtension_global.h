@@ -1,0 +1,12 @@
+#ifndef DBEXTENSION_GLOBAL_H
+#define DBEXTENSION_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(DBEXTENSION_LIBRARY)
+#define DBEXTENSION_EXPORT Q_DECL_EXPORT
+#else
+#define DBEXTENSION_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // DBEXTENSION_GLOBAL_H
