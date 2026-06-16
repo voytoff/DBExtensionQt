@@ -8,5 +8,4 @@ set(CMAKE_AUTORCC ON)
 enable_testing() # Required to use CTest
 
 add_subdirectory(lib)
-#add_subdirectory(tests)
-add_subdirectory(test)
+add_subdirectory(tests)
