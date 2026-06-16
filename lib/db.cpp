@@ -4,7 +4,7 @@
 
 DB::DB(QObject *parent)
   : QObject{parent} {
-  db = QSqlDatabase::addDatabase("QMYSQL");
+  db = QSqlDatabase::addDatabase(Plugin);
   db.setHostName(HostName);
   db.setPort(HostPort);
   db.setDatabaseName(DatabaseName);
@@ -19,8 +19,8 @@ bool DB::open() {
 QString DB::crate(int id) {
   QSqlQuery query;
   // Подготавливаем запрос
-  query.prepare("SELECT id, name FROM test WHERE id = :id");
-  query.bindValue(":id", 18);
+  query.prepare("SELECT id, name FROM crate WHERE id = :id");
+  query.bindValue(":id", id);
 
   if (!query.exec()) return nullptr;
 
