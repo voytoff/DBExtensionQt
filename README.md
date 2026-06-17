@@ -62,7 +62,7 @@ sudo ufw allow 3306/tcp
 ```bash
 sudo mariadb
 CREATE USER 'mmp'@'%' IDENTIFIED BY '2026';
-CREATE USER 'mmp'@'192.168.1.50' IDENTIFIED BY '2026';
+или CREATE USER 'mmp'@'192.168.1.50' IDENTIFIED BY '2026';
 GRANT ALL PRIVILEGES ON 106org.* TO 'mmp'@'%';
 FLUSH PRIVILEGES;
 EXIT;
