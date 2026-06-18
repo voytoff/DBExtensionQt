@@ -26,8 +26,12 @@ void case1::test_case1() {
 
   DB db;
   if (db.open()) {
-    auto name = db.crate(1);
+    auto l1 = db.crates();
+    auto id = l1.at(0)->id;
+    auto name = db.crate(id)->name;
     qDebug() << name;
+    auto modules = db.modules(id);
+    qDebug() << modules;
   } else {
     qDebug() << db.lastError();
   }

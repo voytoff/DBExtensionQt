@@ -16,10 +16,17 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
   Sql
 )
 
+set(DB_RESOURCE_FILES res.qrc)
+qt6_add_resources(DB_PROJECT_RESOURCES ${DB_RESOURCE_FILES})
+
 add_library(DBExtension SHARED
+  ${DB_PROJECT_RESOURCES}
   DBExtension_global.h
   dbextension.h dbextension.cpp
   db.h db.cpp
+  dbcrate.h dbcrate.cpp
+  dbmodule.h dbmodule.cpp
+  dbcore.h dbcore.cpp
 )
 
 target_link_libraries(DBExtension PRIVATE
