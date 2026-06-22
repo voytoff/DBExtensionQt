@@ -1,34 +1,179 @@
--- --------------------------------------------------------
--- Хост:                         127.0.0.1
--- Версия сервера:               12.3.2-MariaDB - MariaDB Server
--- Операционная система:         Win64
--- HeidiSQL Версия:              12.17.0.7270
--- --------------------------------------------------------
+/*M!999999\- enable the sandbox mode */
+-- MariaDB dump 10.19-11.7.2-MariaDB, for Win64 (AMD64)
+--
+-- Host: localhost    Database: 106org
+-- ------------------------------------------------------
+-- Server version	12.3.2-MariaDB
 
--- Дамп структуры базы данных 106org
-DROP DATABASE IF EXISTS `106org`;
-CREATE DATABASE IF NOT EXISTS `106org`;
-USE `106org`;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
--- Дамп структуры для таблица 106org.crate
-DROP TABLE IF EXISTS `crate`;
-CREATE TABLE IF NOT EXISTS `crate` (
+--
+-- Table structure for table `calibration`
+--
+
+DROP TABLE IF EXISTS `calibration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `calibration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `source` int(11) DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='Градуировки';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `calibration`
+--
+
+LOCK TABLES `calibration` WRITE;
+/*!40000 ALTER TABLE `calibration` DISABLE KEYS */;
+/*!40000 ALTER TABLE `calibration` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `crate`
+--
+
+DROP TABLE IF EXISTS `crate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `crate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cratetype_id` int(11) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `host` varchar(20) DEFAULT '127.0.0.1',
   `port` int(11) DEFAULT 11111,
+  PRIMARY KEY (`id`),
+  KEY `crate_cratetype_FK` (`cratetype_id`),
+  CONSTRAINT `crate_cratetype_FK` FOREIGN KEY (`cratetype_id`) REFERENCES `cratetype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Таблица крейтов';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `crate`
+--
+
+LOCK TABLES `crate` WRITE;
+/*!40000 ALTER TABLE `crate` DISABLE KEYS */;
+INSERT INTO `crate` VALUES
+(1,1,'lcard1','127.0.0.1',11111),
+(3,NULL,'lcard2','127.0.0.1',11111);
+/*!40000 ALTER TABLE `crate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cratetype`
+--
+
+DROP TABLE IF EXISTS `cratetype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cratetype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `interface` tinyint(4) DEFAULT NULL COMMENT 'Интерфейс',
+  `slots` int(11) DEFAULT NULL COMMENT 'Количество слотов',
+  `description` varchar(256) DEFAULT NULL COMMENT 'Описание',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT COMMENT='Таблица крейтов';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='Типы крейтов';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- Экспортируемые данные не выделены.
+--
+-- Dumping data for table `cratetype`
+--
 
--- Дамп структуры для таблица 106org.module
+LOCK TABLES `cratetype` WRITE;
+/*!40000 ALTER TABLE `cratetype` DISABLE KEYS */;
+INSERT INTO `cratetype` VALUES
+(1,'LTR-EU-16',NULL,16,'16-местный крейт с интерфейсами USB 2.0, Ethernet и источником питания.');
+/*!40000 ALTER TABLE `cratetype` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `module`
+--
+
 DROP TABLE IF EXISTS `module`;
-CREATE TABLE IF NOT EXISTS `module` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `crate_id` int(11) DEFAULT NULL COMMENT 'Связующий столбец с таблицей crate',
+  `moduletype_id` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL DEFAULT '',
+  `description` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_crate_module` (`crate_id`),
-  CONSTRAINT `FK_crate_module` FOREIGN KEY (`crate_id`) REFERENCES `crate` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT COMMENT='LTR-модуль крейта';
+  KEY `module_moduletype_FK` (`moduletype_id`),
+  CONSTRAINT `FK_crate_module` FOREIGN KEY (`crate_id`) REFERENCES `crate` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `module_moduletype_FK` FOREIGN KEY (`moduletype_id`) REFERENCES `moduletype` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='LTR-модуль крейта';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `module`
+--
+
+LOCK TABLES `module` WRITE;
+/*!40000 ALTER TABLE `module` DISABLE KEYS */;
+INSERT INTO `module` VALUES
+(1,1,NULL,'ltr11',NULL),
+(2,3,NULL,'ltr114',NULL);
+/*!40000 ALTER TABLE `module` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `moduletype`
+--
+
+DROP TABLE IF EXISTS `moduletype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `moduletype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `depth` int(11) DEFAULT NULL,
+  `interface` smallint(11) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='Типы модулей';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `moduletype`
+--
+
+LOCK TABLES `moduletype` WRITE;
+/*!40000 ALTER TABLE `moduletype` DISABLE KEYS */;
+INSERT INTO `moduletype` VALUES
+(1,'LTR11',14,11,'Универсальный модуль АЦП с последовательным опросом каналов');
+/*!40000 ALTER TABLE `moduletype` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database '106org'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2026-06-22 16:15:31
