@@ -47,7 +47,7 @@ void DB::close() {
 }
 
 dbCrate *DB::crate(int id) {
-  auto query = new QSqlQuery();
+  auto query = new QSqlQuery(db);
   // Подготавливаем запрос
   query->prepare("SELECT * FROM crate WHERE id=:id");
   query->bindValue(":id", id);
@@ -63,7 +63,7 @@ dbCrate *DB::crate(int id) {
 }
 
 QList<dbCrate*> DB::crates() {
-  auto query = new QSqlQuery();
+  auto query = new QSqlQuery(db);
   // Подготавливаем запрос
   query->prepare("SELECT * FROM crate");
 
@@ -80,7 +80,7 @@ QList<dbCrate*> DB::crates() {
 }
 
 dbModule *DB::module(int id) {
-  QSqlQuery query;
+  QSqlQuery query(db);
   // Подготавливаем запрос
   query.prepare("SELECT * FROM module WHERE id=:id");
   query.bindValue(":id", id);
@@ -96,7 +96,7 @@ dbModule *DB::module(int id) {
 }
 
 QList<dbModule*> DB::modules(int crate_id) {
-  QSqlQuery query;
+  QSqlQuery query(db);
   // Подготавливаем запрос
   QString sql("SELECT * FROM module");
   if (crate_id > 0)
