@@ -24,14 +24,16 @@ void case1::test_case1() {
   QCoreApplication app(argc, nullptr);
   qDebug() << "Available drivers:" << QSqlDatabase::drivers();
 
-  DB db;
+  DB db("TEST");
   if (db.open()) {
     auto l1 = db.crates();
+    if (l1.length() > 0) {
     auto id = l1.at(0)->id;
     auto name = db.crate(id)->name;
     qDebug() << name;
     auto modules = db.modules(id);
     qDebug() << modules;
+    }
   } else {
     qDebug() << db.lastError();
   }

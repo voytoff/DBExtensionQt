@@ -27,6 +27,7 @@ add_library(DBExtension SHARED
   dbcrate.h dbcrate.cpp
   dbmodule.h dbmodule.cpp
   dbcore.h dbcore.cpp
+  dbexperiment.h dbexperiment.cpp
 )
 
 target_link_libraries(DBExtension PRIVATE

@@ -1,8 +1,7 @@
 #include "dbcrate.h"
 
 dbCrate::dbCrate(QSqlQuery *query)
-  : dbCore{query} {
-}
+  : dbCore{query} {}
 
 void dbCrate::load() {
 }

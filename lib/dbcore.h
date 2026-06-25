@@ -24,7 +24,6 @@ public :
     instance->init();
     return instance;
   }
-
 };
 
 #endif // DBCORE_H

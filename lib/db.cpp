@@ -2,19 +2,21 @@
 #include "DBExtension_global.h"
 #include <QSqlQuery>
 
-DB::DB(QObject *parent)
-  : QObject{parent} {
-  db = QSqlDatabase::addDatabase(Plugin);
-  db.setHostName(HostName);
-  db.setPort(HostPort);
-  db.setDatabaseName(DatabaseName);
-  db.setUserName(UserName);
-  db.setPassword(Password);
-  this->timeout(5); // 5 сек
-}
+DB::DB(const QString &connectionName, QObject *parent)
+  : DB(connectionName, HostName, HostPort, DatabaseName, UserName, Password, 5) {}
 
-DB::DB(const QString &hostName, const int &hostPort, const QString &databaseName, const QString &userName, const QString &password, const int &timeout, QObject *parent) {
-  db = QSqlDatabase::addDatabase(Plugin);
+DB::DB(const QString &connectionName,
+       const QString &hostName,
+       const int &hostPort,
+       const QString &databaseName,
+       const QString &userName,
+       const QString &password,
+       const int &timeout,
+       QObject *parent)
+  : QObject{parent}
+  , connectionName(connectionName) {
+
+  db = QSqlDatabase::addDatabase(Plugin, connectionName);
   db.setHostName(hostName);
   db.setPort(hostPort);
   db.setDatabaseName(databaseName);
@@ -25,6 +27,10 @@ DB::DB(const QString &hostName, const int &hostPort, const QString &databaseName
 
 void DB::timeout(const int & sec) {
   db.setConnectOptions(QString("MYSQL_OPT_CONNECT_TIMEOUT=%1").arg(sec));
+}
+
+QSqlDatabase DB::instance(const QString &connectionName) {
+  return QSqlDatabase::database(connectionName);
 }
 
 QSqlError DB::lastError() const {

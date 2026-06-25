@@ -12,12 +12,14 @@
 class DBEXTENSION_EXPORT DB : public QObject {
   Q_OBJECT
 public:
-  explicit DB(QObject *parent = nullptr);
-  explicit DB(const QString &hostName, const int &hostPort, const QString &databaseName, const QString &userName, const QString &password, const int &timeout, QObject *parent = nullptr);
+  explicit DB(const QString &hostName, QObject *parent = nullptr);
+  explicit DB(const QString &connectionName, const QString &hostName, const int &hostPort, const QString &databaseName, const QString &userName, const QString &password, const int &timeout, QObject *parent = nullptr);
+  static QSqlDatabase instance(const QString &connectionName);
 
 private:
   QSqlDatabase db;
   void timeout(const int &sec);
+  QString connectionName;
 
 public slots:
   QSqlError lastError() const;

@@ -9,6 +9,9 @@
 class DBEXTENSION_EXPORT dbCrate : public dbCore {
 public:
   dbCrate(QSqlQuery *query = nullptr);
+  int crateType;
+  QString host;
+  int port;
 
 protected:
   void load() override;
